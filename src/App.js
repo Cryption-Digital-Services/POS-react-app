@@ -72,23 +72,24 @@ const App = () => {
     setAccount(accounts[0]);
     const networkId = await web3.eth.net.getId();
 
-    const goerilContractaddress = "0x655F2166b0709cd575202630952D71E2bB0d61Af";
-    const maticContractaddress = "0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1";
+    const goerilDerc20address = "0x655F2166b0709cd575202630952D71E2bB0d61Af"; // Derc 20 token addres deployed on  goeril
+    const maticDerc20address = "0xfe4F5145f6e09952a5ba9e956ED0C25e3Fa4c7F1"; // Derc20 token address deployed on matic
 
     setNetworkid(networkId);
+
     if (networkId == 5) {
-      const erc20 = new web3.eth.Contract(ERC20abi.abi, goerilContractaddress);
+      const erc20 = new web3.eth.Contract(ERC20abi.abi, goerilDerc20address);
       const name = await erc20.methods.balanceOf(accounts[0]).call();
-      const balance = name / 1000000000000000000;
+      const balance = name / 1000000000000000000; // 18 decimals
       console.log(balance);
       seterc20balance(balance);
 
       setERC20(erc20);
       setLoading(false);
     } else if (networkId == 80001) {
-      const erc20 = new web3.eth.Contract(ERC20abi.abi, maticContractaddress);
+      const erc20 = new web3.eth.Contract(ERC20abi.abi, maticDerc20address);
       const name = await erc20.methods.balanceOf(accounts[0]).call();
-      const balance = name / 1000000000000000000;
+      const balance = name / 1000000000000000000; // 18 decimals
       console.log(balance);
       seterc20balance(balance);
       setLoading(false);
@@ -117,54 +118,38 @@ const App = () => {
 
   const Approve = async () => {
     const maticPOSClient = posclient();
-    const x = inputvalue * 1000000000000000000;
+    const x = inputvalue * 1000000000000000000; // 18 decimals
     const x1 = x.toString();
-    await maticPOSClient.approveERC20ForDeposit(
-      "0x655F2166b0709cd575202630952D71E2bB0d61Af",
-      x1,
-      {
-        from: account,
-      }
-    );
+    await maticPOSClient.approveERC20ForDeposit(goerilDerc20address, x1, {
+      from: account,
+    });
   };
 
   const Deposit = async () => {
     const maticPOSClient = posclient();
 
-    const x = inputvalue * 1000000000000000000;
+    const x = inputvalue * 1000000000000000000; // 18 decimals
     const x1 = x.toString();
 
-    await maticPOSClient.depositERC20ForUser(
-      "0x655F2166b0709cd575202630952D71E2bB0d61Af",
-      account,
-      x1,
-      {
-        from: account,
-      }
-    );
+    await maticPOSClient.depositERC20ForUser(goerilDerc20address, account, x1, {
+      from: account,
+    });
   };
 
   const burn = async () => {
     const maticPOSClient = posclient();
     const x = inputvalue * 1000000000000000000;
     const x1 = x.toString();
-    await maticPOSClient.burnERC20(
-      "0x2d7882beDcbfDDce29Ba99965dd3cdF7fcB10A1e",
-      x1,
-      {
-        from: account,
-      }
-    );
+    await maticPOSClient.burnERC20(maticDerc20address, x1, {
+      from: account,
+    });
   };
 
   const exit = async () => {
     const maticPOSClient = posclient();
-    await maticPOSClient.exitERC20(
-      "0xc52b529e37bd23fd6040db80cd4d48809e8846b4965abc492413908010733679",
-      {
-        from: account,
-      }
-    );
+    await maticPOSClient.exitERC20(inputvalue, {
+      from: account,
+    });
   };
   const onchange = (e) => {
     setinputvalue(e.target.value);
