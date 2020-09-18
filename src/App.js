@@ -67,7 +67,7 @@ const App = () => {
     if (networkId == 1) {
       const erc20 = new web3.eth.Contract(ERC20abi.abi, goerilDerc20address);
       const name = await erc20.methods.balanceOf(accounts[0]).call();
-      const balance = name / 1000000000000000000; // 18 decimals
+      const balance = name / 1000000; // 18 decimals
       console.log(balance);
       seterc20balance(balance);
 
@@ -76,7 +76,7 @@ const App = () => {
     } else if (networkId == 137) {
       const erc20 = new web3.eth.Contract(ERC20abi.abi, maticDerc20address);
       const name = await erc20.methods.balanceOf(accounts[0]).call();
-      const balance = name / 1000000000000000000; // 18 decimals
+      const balance = name / 1000000; // 18 decimals
       console.log(balance);
       seterc20balance(balance);
       setLoading(false);
@@ -88,12 +88,12 @@ const App = () => {
 
   const posclient = () => {
     const maticPOSClient = new MaticPOSClient({
-      network: "testnet",
-      version: "mumbai",
+      network: "mainnet",
+      version: "v1",
       maticProvider: window.web3,
       parentProvider: window.web3,
-      posRootChainManager: "0xBbD7cBFA79faee899Eaf900F13C9065bF03B1A74",
-      posERC20Predicate: "0xdD6596F2029e6233DEFfaCa316e6A95217d4Dc34",
+      posRootChainManager: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
+      posERC20Predicate: "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf4",
       parentDefaultOptions: { from: account },
       maticDefaultOptions: { from: account },
     });
@@ -102,15 +102,15 @@ const App = () => {
 
   const posclientGeneral = () => {
     const maticPOSClient = new MaticPOSClient({
-      network: "testnet",
-      version: "mumbai",
+      network: "mainnet",
+      version: "v1",
       maticProvider: maticprovider,
       parentProvider: window.web3,
-      POSRootChainManager: "0xBbD7cBFA79faee899Eaf900F13C9065bF03B1A74",
-      posERC20Predicate: "0xdD6596F2029e6233DEFfaCa316e6A95217d4Dc34",
-      posERC721Predicate: "0x74D83801586E9D3C4dc45FfCD30B54eA9C88cf9b",
-      posERC1155Predicate: "0xB19a86ba1b50f0A395BfdC3557608789ee184dC8",
-      posEtherPredicate: "0xe2B01f3978c03D6DdA5aE36b2f3Ac0d66C54a6D5",
+      POSRootChainManager: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
+      posERC20Predicate: "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
+      posERC721Predicate: "0xE6F45376f64e1F568BD1404C155e5fFD2F80F7AD",
+      posERC1155Predicate: "0x0B9020d4E32990D67559b1317c7BF0C15D6EB88f",
+      posEtherPredicate: "0x8484Ef722627bf18ca5Ae6BcF031c23E6e922B30",
       parentDefaultOptions: { from: account },
       maticDefaultOptions: { from: account },
     });
@@ -119,15 +119,15 @@ const App = () => {
   // posclientBurn facilitates the burning of tokens on the matic chain
   const posclientBurn = () => {
     const maticPOSClient = new MaticPOSClient({
-      network: "testnet",
-      version: "mumbai",
+      network: "mainnet",
+      version: "v1",
       maticProvider: window.web3,
       parentProvider: window.web3,
-      POSRootChainManager: "0xBbD7cBFA79faee899Eaf900F13C9065bF03B1A74",
-      posERC20Predicate: "0xdD6596F2029e6233DEFfaCa316e6A95217d4Dc34",
+      POSRootChainManager: "0xA0c68C638235ee32657e8f720a23ceC1bFc77C77",
+      posERC20Predicate: "0x40ec5B33f54e0E8A33A975908C5BA1c14e5BbbDf",
       posERC721Predicate: "0x74D83801586E9D3C4dc45FfCD30B54eA9C88cf9b",
-      posERC1155Predicate: "0xB19a86ba1b50f0A395BfdC3557608789ee184dC8",
-      posEtherPredicate: "0xe2B01f3978c03D6DdA5aE36b2f3Ac0d66C54a6D5",
+      posERC1155Predicate: "0x0B9020d4E32990D67559b1317c7BF0C15D6EB88f",
+      posEtherPredicate: "0x8484Ef722627bf18ca5Ae6BcF031c23E6e922B30",
       parentDefaultOptions: { from: account },
       maticDefaultOptions: { from: account },
     });
@@ -143,13 +143,13 @@ const App = () => {
   const Deposit = async () => {
     const maticPOSClient = posclientGeneral();
 
-    const x = inputvalue * 1000000000000000000; // 18 decimals
+    const x = inputvalue * 1000000; // 18 decimals
     const x1 = x.toString();
 
     await maticPOSClient
       .approveERC20ForDeposit(GoerilDerc20address, x1, {
         from: account,
-        gas: "7000000",
+        
       })
       .then(async (res) => {
         await maticPOSClient.depositERC20ForUser(
@@ -158,7 +158,7 @@ const App = () => {
           x1,
           {
             from: account,
-            gas: "7000000",
+            
           }
         );
       });
@@ -171,7 +171,7 @@ const App = () => {
 
   const burn = async () => {
     const maticPOSClient = posclientBurn();
-    const x = inputvalue * 1000000000000000000;
+    const x = inputvalue * 1000000;
     const x1 = x.toString();
     await maticPOSClient
       .burnERC20(MaticDerc20address, x1, {
@@ -187,7 +187,6 @@ const App = () => {
     await maticPOSClient
       .exitERC20(inputvalue, {
         from: account,
-        gas: "7000000",
       })
       .then((res) => {
         console.log("exit o/p", res);
