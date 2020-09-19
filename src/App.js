@@ -43,7 +43,7 @@ const App = () => {
     setLoading(true);
 
     const maticProvider = new WalletConnectProvider({
-      host: `https://rpc-mumbai.matic.today`,
+      host: `https://rpc-mainnet.matic.network`,
       callbacks: {
         onConnect: console.log("matic connected"),
         onDisconnect: console.log("matic disconnected!"),
@@ -183,7 +183,7 @@ const App = () => {
   };
 
   const exit = async () => {
-    const maticPOSClient = posclientGeneral();
+    const maticPOSClient = posclientGeneral();    
     await maticPOSClient
       .exitERC20(inputvalue, {
         from: account,
@@ -220,7 +220,7 @@ const App = () => {
         <button
           class="btn-primary"
           onClick={Deposit}
-          disabled={Networkid != 0 && Networkid == 80001 ? true : false}
+          disabled={Networkid !== 0 && Networkid === 80001 ? true : false}
         >
           Deposit
         </button>
@@ -228,7 +228,7 @@ const App = () => {
         <button
           class="btn-primary"
           onClick={burn}
-          disabled={Networkid != 0 && Networkid == 5 ? true : false}
+          disabled={Networkid !== 0 && Networkid === 5 ? true : false}
         >
           burn
         </button>
@@ -236,7 +236,7 @@ const App = () => {
         <button
           class="btn-primary"
           onClick={exit}
-          disabled={Networkid != 0 && Networkid == 80001 ? true : false}
+          disabled={Networkid !== 0 && Networkid === 80001 ? true : false}
         >
           exit
         </button>
